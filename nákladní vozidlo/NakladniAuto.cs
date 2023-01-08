@@ -10,59 +10,69 @@ namespace nákladní_vozidlo
     {
         private string SPZ = "";
         private double nosnost = 0;
-        private readonly double Hmotnost_nakladu = 0;
-        private double zbytek = 0;
+        private double Hmotnost_nakladu = 0;
         private double nalozeno = 0;
         public NakladniAuto(string SPZ, double nosnost, double Hmotnost_nakladu)
         {
             this.SPZ = SPZ;
             this.nosnost = nosnost;
             this.Hmotnost_nakladu = Hmotnost_nakladu;
-            zbytek = Hmotnost_nakladu;
             nalozeno = 0;
         }
 
         public string NalozNaklad(double naloz)
         {
-             if ((zbytek == 0)||(nalozeno !=0))
-             {
-                 return "nic tu neni nebo mas uz nalozeno";
-             }
-             else
-             {
-                if(naloz > nosnost)
+
+            if(nalozeno == nosnost)
+            {
+                return "auto je jiz plne";
+            }
+            else
+            {
+                if((naloz > Hmotnost_nakladu)&&(naloz <= nosnost))
                 {
-                    return "pozadavek prekonava nosnost";
-                }
-                else
-                {
-                    if (naloz > zbytek)
+                    if (Hmotnost_nakladu == 0)
                     {
-                        nalozeno = zbytek;
-                        return "nalozily jsme:" + zbytek + " a bohuzel už nam tady nic jineho nezbylo";
-                    }
-                    if (naloz == zbytek)
-                    {
-                        nalozeno = zbytek;
-                        return "nalozily jsme presne mnozstvi ktere jsme tady mely a uz nam nic jineho nezbylo";
+                        return "nemame tu zádny náklad";
                     }
                     else
                     {
-                        double zbytecek = zbytek - naloz;
-                        zbytek = zbytek - zbytecek;
-                        nalozeno = nosnost;
-                        return "nalozily jsme " + nosnost + "zbylo nam tady: " + zbytecek;
+                        nalozeno = Hmotnost_nakladu;
+                        return "nalozily jsme zbytek nakladu, ale nebylo to dust na to abychom mohly dodat pozadovane mnozstvi";
                     }
                 }
-             }
+               else if(naloz > nosnost)
+                {
+                    Hmotnost_nakladu = Hmotnost_nakladu- nosnost;
+                    nalozeno = nosnost;
+                    return "nemohly jsme nalozit vse, a tak jsme nalozily maximální kapacitu, neboli " + nosnost + "a zbytek jsme nenalozily, zbývá zde ještě " + Hmotnost_nakladu;
+                }
+               else if(naloz == nosnost)
+                {
+                    Hmotnost_nakladu -= naloz;
+                    nalozeno = nosnost;
+                    return "pozadovane mnozstvi nalozeno, zbývá zde " + Hmotnost_nakladu;
+                }
+                else
+                {
+                    Hmotnost_nakladu -= naloz;
+                    nalozeno = naloz;
+                    return "nalozily jsme " + naloz + " na aute je jeste misto na " + (nosnost - naloz) + "nakladu, a zbývá zde " + Hmotnost_nakladu;
+                }
+
+            }
         }
 
         public string Vyloz_Naklad(double vyloz)
         {
-            if(nalozeno == vyloz)
+            if (nalozeno == 0)
+            {
+                return "auto je prazdne";
+            }
+            else if(nalozeno == vyloz)
             {
                 nalozeno = 0;
-                return "naklad vylozen, pozadovane mnozstvi vylozeno, nic nezbyva, dekujeme za pouziti";
+                return "naklad vylozen, nic v trucku nezbyva, dekujeme za pouziti";
             }
             else if(vyloz < nalozeno)
             {
@@ -84,7 +94,7 @@ namespace nákladní_vozidlo
         {
             try
             {
-                return "Auto ma SPZ: " + SPZ + " a ma nalozeno" + nalozeno;
+                return "Auto ma SPZ: " + SPZ + "\n a ma nalozeno" + nalozeno + "\n a jeho nosnost je" + nosnost;
             }
             catch
             {

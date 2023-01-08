@@ -1,12 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Configuration;
 
 namespace nákladní_vozidlo
 {
@@ -20,9 +12,10 @@ namespace nákladní_vozidlo
         }
 
         NakladniAuto Auto;
+        VleckaZaAutem vlecka;
         private void button1_Click(object sender, EventArgs e)
         {
-            if ((textBox1.Text == string.Empty) || (textBox2.Text == string.Empty)||(textBox3.Text == string.Empty))
+            if ((textBox1.Text == string.Empty) || (textBox2.Text == string.Empty)||(textBox3.Text == string.Empty) || (textBox6.Text == string.Empty))
             {
                 MessageBox.Show("zadej neco do vsech textboxu");
             }
@@ -30,10 +23,13 @@ namespace nákladní_vozidlo
             {
                 MessageBox.Show("dekuji");
                 string SPZ = textBox2.Text;
-                double nosnost = double.Parse(textBox1.Text);
                 double hmotnost_nakladu = double.Parse(textBox3.Text);
+                vlecka = new VleckaZaAutem(string.Empty, '\0', '\0', double.Parse(textBox6.Text));
+                double nosnost = double.Parse(textBox1.Text) + vlecka.Vlecka_Nosnost();
                 Auto = new NakladniAuto(SPZ, nosnost, hmotnost_nakladu);
                 groupBox1.Visible = false;
+                textBox6.Visible = false;
+                label7.Visible = false;
                 groupBox2.Visible = true;
                 groupBox2.Location = new Point(12, 42);
                 button4.Visible = true;
